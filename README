@@ -1,0 +1,10 @@
+Real simple HTTP CLI client.
+
+It does not (yet) take any argument, every setting and option you need is in simpleHTTP_conf.py.
+
+
+Important features :
+- Support SSL (still experimental, I guess)
+- Basic and Digest authentification
+- GET, POST and COOKIES parameters
+- You can set additionnal headers. Beware malformed headers can fail the request.

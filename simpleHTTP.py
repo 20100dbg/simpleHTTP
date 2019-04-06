@@ -1,12 +1,6 @@
 import socket, ssl
-import urllib.parse
-import base64, hashlib
+import base64, urllib.parse
 import simpleHTTP_conf
-
-#todo :
-# fix ssl
-# debug : afficher host / port / https
-
 
 
 print("\n=====                 SimpleHTTP                 =====")
@@ -15,23 +9,22 @@ print("=====                  By Marty                  =====\n\n")
 
 CONF = simpleHTTP_conf.CONF
 
+#Connect to socket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((CONF['host'], CONF['port']))
+
+
+if CONF['https']:
+	context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+	s = ssl.wrap_socket(s)
+
+
 CONF['data_get'] = urllib.parse.urlencode(CONF['data_get'])
 CONF['data_post'] = urllib.parse.urlencode(CONF['data_post'])
 
 if CONF['data_get']:
 	CONF['url'] = CONF['url'] + "?" + CONF['data_get']
 
-
-#Connect to socket
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((CONF['host'], CONF['port']))
-
-#s = socket.create_connection((CONF['host'], CONF['port']))
-
-if CONF['https']:
-	context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-	#s = context.wrap_socket(s, server_hostname=CONF['host'])
-	s = ssl.wrap_socket(s)
 
 #Building HTTP request
 req = CONF['method'] + " " + CONF['url'] + " " + "HTTP/1.1" + CONF['NEWLINE']
@@ -40,12 +33,8 @@ req = req + "User-Agent: " + CONF['user_agent'] + CONF['NEWLINE']
 req = req + "Connection: close" + CONF['NEWLINE']
 
 if CONF['http_credentials']:
-
-	if CONF['authentification_type'] == "Basic":
-		req = req + "Authorization: Basic " + base64.b64encode(CONF['http_credentials']) + CONF['NEWLINE']
-		#req = req + "Authorization: Basic " + base64.b64encode(CONF['http_credentials'].encode('utf-8')).decode('utf-8') + CONF['NEWLINE']
-	elif CONF['authentification_type'] == "Digest":
-		req = req + "Authorization: Digest " + hashlib.md5(CONF['http_credentials']) + CONF['NEWLINE']
+	req = req + "Authorization: Basic " + base64.b64encode(CONF['http_credentials']) + CONF['NEWLINE']
+	#req = req + "Authorization: Basic " + base64.b64encode(CONF['http_credentials'].encode('utf-8')).decode('utf-8') + CONF['NEWLINE']
 
 if CONF['cookie']:
 	req = req + "Cookie: " + urllib.parse.urlencode(CONF['cookie']).replace('&', ';') + CONF['NEWLINE']
