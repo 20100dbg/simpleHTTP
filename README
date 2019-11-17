@@ -1,6 +1,7 @@
 Real simple HTTP CLI client.
 
-It does not (yet) take any argument, every setting and option you need is in simpleHTTP_conf.py.
+1 - You set parameters for your HTTP request. It is pretty personnalisable
+2 - Launch script, get response.
 
 
 Important features :
@@ -8,3 +9,26 @@ Important features :
 - Basic and Digest authentification
 - GET, POST and COOKIES parameters
 - You can set additionnal headers. Beware malformed headers can fail the request.
+
+
+Options :
+
+-h <host>               Host : sub.mydomain.com
+-p <port>               Defaut : 80
+-s                      Enable HTTPS
+-u <url>                Path : /folder/main
+-m <method>             HTTP method : GET,POST,HEAD,etc
+--creds <login:pass>
+--useragent <user agent>        Credentials for basic HTTP auth
+
+GET, POST and COOKIE data must be JSON encoded : {'p1':'v1','p2':'v2'}
+--get <data get>                GET data
+--post <data post>              POST data
+--cookie <data cookie>          COOKIE data
+
+--showreq       show request
+--showbody      show body response
+-v              enable verbose
+
+
+
